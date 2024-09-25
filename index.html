@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: #f8f8f8;
+            text-align: center;
+        }
+        #container {
+            position: relative;
+            width: 300px;  /* 대지의 너비 */
+            height: 500px;  /* 대지의 높이 */
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 중앙 정렬 */
+        }
+        #bun-bottom {
+            position: absolute;
+            bottom: 0;
+            width: 300px;
+        }
+        .ingredient {
+            position: absolute;
+            width: 300px;
+        }
+        .ingredient-btn {
+            margin: 10px;
+            padding: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: inline-block;
+        }
+        #lettuce-btn {
+            background-color: #90ee90; /* 연두색 */
+        }
+        #cheese-btn {
+            background-color: #ffd700; /* 노랑색 */
+        }
+        #tomato-btn {
+            background-color: #ff6347; /* 빨강색 */
+        }
+        #finish-btn {
+            background-color: #000000; /* 검정색 */
+            color: white;
+        }
+        #floating-text {
+            font-size: 1.5rem;
+            color: #333;
+            animation: floatText 7s linear infinite; /* 애니메이션 속도 조정 */
+            margin-bottom: 20px;
+        }
+        @keyframes floatText {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        #button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center; /* 버튼들을 중앙에 정렬 */
+        }
+        #replay-btn {
+            background-color: blue;
+            color: white;
+            font-size: 1.2rem;
+            padding: 10px;
+            display: none;
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="floating-text">오늘은 내가 햄벅 요리사~</div>
+
+<div id="container">
+    <img src="bun-bottom.png" id="bun-bottom">
+</div>
+
+<div id="button-container">
+    <button class="ingredient-btn" id="lettuce-btn">Lettuce</button>
+    <button class="ingredient-btn" id="cheese-btn">Cheese</button>
+    <button class="ingredient-btn" id="tomato-btn">Tomato</button>
+    <button class="ingredient-btn" id="finish-btn">Finish Burger</button>
+</div>
+
+<button id="replay-btn">Replay</button>
+
+<script>
+    let stackHeight = 60;  // 재료가 쌓이는 높이 간격
+    let currentHeight = 60;  // 초기 높이 (빵 아랫부분 높이)
+
+    function addIngredient(imageSrc) {
+        const container = document.getElementById('container');
+        const newIngredient = document.createElement('img');
+        newIngredient.src = imageSrc;
+        newIngredient.classList.add('ingredient');
+        newIngredient.style.bottom = currentHeight + 'px'; // 재료의 위치 설정
+        container.appendChild(newIngredient);
+        currentHeight += stackHeight;  // 다음 재료를 위해 높이를 증가
+    }
+
+    document.getElementById('lettuce-btn').onclick = function() {
+        addIngredient('lettuce.png');
+    };
+
+    document.getElementById('cheese-btn').onclick = function() {
+        addIngredient('cheese.png');
+    };
+
+    document.getElementById('tomato-btn').onclick = function() {
+        addIngredient('tomato.png');
+    };
+
+    document.getElementById('finish-btn').onclick = function() {
+        addIngredient('bun-top.png');  // 빵 뚜껑을 쌓음
+
+        // 2초 후에 먹방 이미지와 Replay 버튼 표시
+        setTimeout(function() {
+            const container = document.getElementById('container');
+            const mukbangImage = document.createElement('img');
+            mukbangImage.src = '먹방.jpg';
+            mukbangImage.style.width = '300px';  // 이미지를 원하는 크기로 조절
+            mukbangImage.style.position = 'absolute';
+            mukbangImage.style.top = '0'; // 이미지가 가장 위에 오도록 위치 조정
+            container.appendChild(mukbangImage);
+            
+            document.getElementById('replay-btn').style.display = 'block';  // Replay 버튼 표시
+            document.getElementById('button-container').style.display = 'none';  // 재료 버튼 숨김
+        }, 1000); // 2000ms = 2초
+    };
+
+    document.getElementById('replay-btn').onclick = function() {
+        // 모든 재료와 Replay 버튼 초기화
+        const container = document.getElementById('container');
+        container.innerHTML = '<img src="bun-bottom.png" id="bun-bottom">';
+        currentHeight = 60;
+        document.getElementById('replay-btn').style.display = 'none';
+        document.getElementById('button-container').style.display = 'flex';  // 재료 버튼 다시 표시
+    };
+</script>
+
+</body>
+</html>
